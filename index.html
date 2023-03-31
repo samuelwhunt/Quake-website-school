@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="styles.css">
+
+        <title>Quake</title>
+    </head>
+    <body>
+        <h1 id="Title-header">Quake: what is it, why it was so important, and how it affects gaming today</h1>
+        <h3>Also, I will be covering the more technical side of Quake, not the gameplay or storyline.</h3>
+        <div class="Formatting">
+        <h2>What is it?</h2>
+        <p>Quake was a first person shooter developed by id Software and released on June 22nd, 1996. 
+            It used a 3D game engine specifically made for Quake, the Quake Engine.
+            </p>
+        </div>
+        <div class="Formatting">
+        <h2>Why was it so important?</h2>
+        <p>Quake was one of the first 3d FPS games, and it could run on home computers at the time, letting a much larger audience play it as opposed to having it on a console.
+            
+        </p>
+        </div>
+        <div class="Formatting">
+        <h2>How does it still affect gaming?</h2>
+        <p>An incredible amount of forks were made to the quake engine, some notable ones including:</p>
+        <ul>
+            <li>GoldSrc, the precursor to the source engine, developed by Valve.</li>
+            <li>The Infinity Ward engine, used for the Call of Duty games.</li>
+            <li>The Titanfall and Apex Legends engines, dervatives of the source engine.</li>
+        </ul>
+        <p>There are a lot of bugs and features that are present in vast majority of these forks, including air-strafing, movement similarities, and physics. 
+            The physics get weird in the source engine, specifically. 
+            The source engine uses both a havok physics shadow and a quake hitbox for physics.</p>
+        </div>
+        <div class="Formatting">
+        <h2>Change this, placeholder text</h2>
+        <p>There are a lot of technical things that I find interesting, namely how air-strafing works, and how Quake III computed fast inverse square root.</p>
+        <h3>Why air-strafing works</h3>
+        <p>This video explains how air-strafing works incredibly. It is from Matt's Ramblings on youtube.</p>
+        <iframe width="962" height="541" src="https://www.youtube.com/embed/rTsXO6Zicls" title="Strafe-jumping physics explained" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <h3>The Quake III fast inverse square root algorithm</h3>
+        <pre><code>
+            float Q_rsqrt( float number )
+            {
+                long i;
+                float x2, y;
+                const float threehalfs = 1.5F;
+            
+                x2 = number * 0.5F;
+                y  = number;
+                i  = * ( long * ) &y;                       // evil floating point bit level hacking
+                i  = 0x5f3759df - ( i >> 1 );               // what the (removed because reasons)? 
+                y  = * ( float * ) &i;
+                y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
+            //	y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+            
+                return y;
+            }
+        </code></pre>
+        <p>This code became infamous upon the source code release of Quake III Arena. You could be wondering either "What's so weird about this?", or you could be thinking "What?". 
+            The reason that this is so confusing is the hex number on the 10th line. 0x5f3759df. What is this?
+            Well, it's complicated to explain, but I'll do my best. Basically, we do some weird hack to turn the float number into a long int and assign it to the long i.
+            We then bitshift i to the right and subtract that from the "magic" constant, 0x5f3759df. We then turn i back into a float and assign it back to y, and then use newtons method with one iteration for more accuracy.
+        </p>
+        <p>But still. How does this number work? What is so special about the number 0x5f3759df? Well, it's too complex for me to understand, but the reason that it's used is because it preserves the mantissa, and reduces error in the guesses.
+            This number just so happens to be the best choice that they could find.
+        </p>
+        </div>
+    </body>
+</html>
